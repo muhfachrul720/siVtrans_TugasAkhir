@@ -4,7 +4,7 @@
             <div class="w-100 ps-relative" style="height:100vh">
                 <div class="card w-25 m-auto vertical-centered-content">
                     <div class="card-body">
-                        <h5 class="text-center">Login As SuperAdmin</h5>
+                        <h5 class="text-center">Login penanda tangan</h5>
                         <hr class="mb-1">
                             <?= form_open('auth/auth')?>
                             <?= form_hidden('access', 'auth')?>

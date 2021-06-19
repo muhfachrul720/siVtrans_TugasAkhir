@@ -18,6 +18,16 @@
         <script src="<?= base_url()?>assets/admin-lte/plugins/jquery/jquery.min.js"></script>
     </head>
     <style>
+        /* .darkmode {
+            background-color: rgb(41, 42, 43) !important;
+            color : white;
+        }
+
+        .card-body {
+            background-color: rgb(41, 42, 43) !important;
+            color : white;
+        } */
+
         * {
             font-size:14px
         }
@@ -50,7 +60,7 @@
             border-radius:3px;
             width:100%;
             border:dashed 4px #989994;
-            height:290px;
+            height:240px;
             color:#989994;
             text-align:center;
             display:table;
@@ -66,6 +76,13 @@
         .upload-box--drag {
             border:solid 4px #007BFF;
             color:#007BFF;
+        }
+        .cst-table tr td, .cst-table tr th{
+            font-size:12px;
+        }
+
+        .cst-table tr th {   
+            border-top: none;
         }
     </style>
     <body>
@@ -127,7 +144,7 @@
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper p-4">
+        <div class="content-wrapper p-4 darkmode">
             <?php echo $contents; ?>
         </div>
 

@@ -68,6 +68,15 @@ Class M_user extends CI_Model{
         return $this->db->get();
     }
 
+    public function get_all_signer()
+    {
+        $this->db->select('u.username, k.private_key');
+        $this->db->from('tbl_user as u');
+        $this->db->join('tbl_key as k', 'u.default_key = k.id_key');
+        $this->db->where('u.user_level', 2);
+        return $this->db->get();
+    }
+
     // Auth
     public function validate($where, $id = null)
     {

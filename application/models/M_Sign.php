@@ -11,11 +11,12 @@ Class M_sign extends CI_Model{
     }
 
     // Basic Universal CRUD
-    public function insert($data, $batch = false)
+    public function insert($data, $table, $batch = false)
     {
-        $this->db->insert($this->primary_table, $data);
+        if($batch != false){
+            $this->db->insert_batch($table, $data);} 
+        else {$this->db->insert($table, $data);}
         return $this->db->insert_id(); 
-
     }
 
     public function update($table, $where, $data)
@@ -37,6 +38,11 @@ Class M_sign extends CI_Model{
         $this->db->join($this->secondary_table.' as ky', 'si.id_key = ky.id_key');
         $this->db->where('si.id_user', $where);
         return $this->db->get();
+    }
+
+    public function check_(Type $var = null)
+    {
+        # code...
     }
 
 }

@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 date_default_timezone_set('Asia/makassar');
 
-$config['base_url'] = 'http://localhost/tugas_akhir/';
+$config['base_url'] = 'http://localhost/si_Vtrans/';
 
 $config['index_page'] = '';
 
@@ -19,7 +19,7 @@ $config['enable_hooks'] = FALSE;
 
 $config['subclass_prefix'] = 'MY_';
 
-$config['composer_autoload'] = 'application/third_party/vendor/autoload.php';
+$config['composer_autoload'] = 'vendor/autoload.php';
 
 $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 

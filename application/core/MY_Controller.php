@@ -41,6 +41,26 @@
                 var_dump($params);
             }
         }
+
+        function parserPDF($filepath, $status = 'S')   
+        {
+            $pdfText['file'] = '';
+            $parser = new \Smalot\PdfParser\Parser();
+            $pdf    = $parser->parseFile($filepath);
+
+            $lastPages = count($pdf->getPages());
+            $targetPages = $pdf->getPages();
+
+            if($status == 'S'){
+                for($i=0; $i < $lastPages; $i++){
+                    $pdfText['file'] .= $targetPages[$i]->getText();}
+            } else if($status == 'V'){
+                for($i=0; $i < $lastPages - 1; $i++){
+                    $pdfText['file'] .= $targetPages[$i]->getText();}
+                $pdfText['sign'] = $targetPages[$lastPages - 1]->getText();}           
+            
+            return $pdfText;
+        }
     }
 
     class User_Controller extends MY_Controller {

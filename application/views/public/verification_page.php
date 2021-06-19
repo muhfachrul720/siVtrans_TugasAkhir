@@ -18,10 +18,21 @@
                                     <hr>
                                 </div>
                                 <div class="form-group px-3">
+                                    <select name="privatKey" id="" class="form-control form-control-sm">
+                                        <?php $no = 0; foreach($signer as $sg) {?>
+                                            <?php if($no == 0) {?>
+                                                <option value="<?= $sg['private_key'] ?>" selected><?= $sg['username']?></option>
+                                            <?php } else { ?>
+                                                <option value="<?= $sg['private_key'] ?>"><?= $sg['username']?></option>
+                                            <?php };  ?>
+                                        <?php $no = 1; }; ?>
+                                    </select>
+                                </div>
+                                <!-- <div class="form-group px-3">
                                     <label for="">Kunci Privat</label>
                                     <input type="text" name="private_key" class="form-control form-control-sm">
                                     <small style="color:red"><?= form_error('private_key')?></small>
-                                </div>
+                                </div> -->
                                 <div class="form-group px-3">
                                     <input type="submit" class="btn side-blue w-100" value="Verifikasi Dokumen">
                                 </div>
@@ -41,7 +52,7 @@
                                 <br>   
                                 <small>Upload File Disini</small>
                             </div>
-                            <input type="file" name="file_zip" id="file_zip" class="dropzone_input" style="display:none">
+                            <input type="file" name="fileSign" id="file_zip" class="dropzone_input" style="display:none">
 
                             <script>
                                 document.querySelectorAll('.dropzone_input').forEach(inputElement => {

@@ -4,14 +4,17 @@ Class Verification extends MY_Controller{
     public function __construct()
     {
         parent::__construct();  
+        $this->load->model('m_user');
         $this->load->library('zipopen');
         $this->load->library('rsa/rsa_key');
     }
 
     public function index()
     {
-        $this->template->load('template_landing','public/verification_page');
-    }
+        $data['signer'] = $this->m_user->get_all_signer()->result_array();
+
+        $this->template->load('template_landing','public/verification_page', $data);
+    }   
 
     public function verified()
     {
@@ -19,45 +22,26 @@ Class Verification extends MY_Controller{
 
         $this->form_rules_required($post);
         if($this->form_validation->run() != False){
-            if($_FILES['file_zip']['name'] != ''){
+            if($_FILES['fileSign']['name'] != ''){
 
-                // Upload File
-                $path = './upload/zip_verification';
-                $file = $this->file_upload($path, 'file_zip', 'zip|rar');
+                $path = './upload/sign_verification';
+                $file = $this->file_upload($path, 'fileSign', 'pdf');
 
-                // Make folder for Extraction
-                $extpath = './extract/'.substr($file['file_name'], 0, -4);
-                $old = umask(0);
-                mkdir($extpath, 0777);
-                umask($old);
+                $verificateSign = $path.'/'.$file['file_name'];
+                $pdfText = $this->parserPDF($verificateSign, 'V');
+                $cipher = explode('|', $pdfText['sign'] )[1];
 
-                // Extract the file to
-                if($zipdata = $this->zipopen->extract_to($path.'/'.$file['file_name'], $extpath)) {
-                    foreach($zipdata as $z){
-                        if(mime_content_type($extpath.'/'.$z) == 'text/plain') {
-                            $MD_sign = $this->rsa_key->decrypt(file_get_contents($extpath.'/'.$z), $post['private_key']);
-                        } else {
-                            $MD_file = hash_file('sha256', $extpath.'/'.$z);
-                        };
-                    }   
+                $fileMD = hash('sha256', $pdfText['file']);
+                $signMD = $this->rsa_key->decrypt($cipher, $post['privatKey']);
+                
+                if($fileMD === $signMD){echo 'Sama'; } else {echo 'Tidak Sama'; };
+            }   
+        }
+    }
 
-                    if($MD_file === $MD_sign){
-                        $this->session->set_flashdata('notif', 'true'); } 
-                    else {
-                        $this->session->set_flashdata('notif', 'false'); } 
-
-                    $this->delete_directory($extpath);
-                    redirect('public/verification');
-
-                } else {
-
-                    $this->delete_directory($extpath);
-
-                    $this->session->set_flashdata('mark', 'File Zip Tidak Memenuhi Kriteria'); 
-                    redirect('public/verification');
-                };
-            } else {$this->session->set_flashdata('mark', 'File belum di upload'); redirect('public/verification');} 
-        } else {$this->session->set_flashdata('mark', 'Kunci Privat tidak boleh kosong'); redirect('public/verification');}
+    public function qrcode_verified($id)
+    {
+        $this->m_
     }
 
     function delete_directory($dirname) {

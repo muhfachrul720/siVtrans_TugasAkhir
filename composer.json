@@ -1,12 +1,16 @@
 {
-    "name": "cillin/dispos",
+    "name": "cillin/si_vtrans",
     "authors": [
         {
             "name": "Muh Fachrul",
             "email": "muhfachrul720@gmail.com"
         }
     ],
-    "require": {
-        "mpdf/mpdf": "^8.0"
+    "require" : {
+        "smalot/pdfparser": "*",
+        "phpoffice/phpspreadsheet": "^1.18",
+        "mpdf/mpdf": "^8.0",
+        "aferrandini/phpqrcode": "^1.0"
     }
+ 
 }

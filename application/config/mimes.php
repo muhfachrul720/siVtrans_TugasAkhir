@@ -24,7 +24,7 @@ return array(
 	'sea'	=>	'application/octet-stream',
 	'dll'	=>	'application/octet-stream',
 	'oda'	=>	'application/oda',
-	'pdf'	=>	array('application/pdf', 'application/force-download', 'application/x-download', 'binary/octet-stream'),
+	'pdf'	=>	array('application/pdf', 'application/force-download', 'application/x-download', 'binary/octet-stream', 'application/octet-stream'),
 	'ai'	=>	array('application/pdf', 'application/postscript'),
 	'eps'	=>	'application/postscript',
 	'ps'	=>	'application/postscript',
@@ -179,5 +179,6 @@ return array(
 	'odt'	=>	'application/vnd.oasis.opendocument.text',
 	'odm'	=>	'application/vnd.oasis.opendocument.text-master',
 	'ott'	=>	'application/vnd.oasis.opendocument.text-template',
-	'oth'	=>	'application/vnd.oasis.opendocument.text-web'
+	'oth'	=>	'application/vnd.oasis.opendocument.text-web',
+	'oct'   =>  'application/octet-stream'
 );

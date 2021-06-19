@@ -89,7 +89,7 @@
     </style>
     <body>
 
-    <div class="all-white"">
+    <div class="all-white" style="position:relative">
       <?php echo $contents; ?>
     </div>
 
