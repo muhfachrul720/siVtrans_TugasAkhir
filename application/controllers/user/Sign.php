@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use chillerlan\QRCode\{QRCode, QROptions};
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 Class Sign extends MY_Controller{
@@ -77,9 +78,6 @@ Class Sign extends MY_Controller{
                 $data['trans'] = $fetchData;
                 $data['no_surat'] = $getActiveSheet->getCell('A9')->getValue();
 
-                // $this->debug($data);
-                // die;
-                // $this->template->load('template_admin','user/form_overview_nilai', $data);
                 $this->template->load('template_admin','user/new_form_overview_nilai', $data);
 
             } else {
@@ -96,9 +94,18 @@ Class Sign extends MY_Controller{
     public function generate_trans()
     {   
         $post = $this->input->post();
-        // $this->debug($post);
-        // die;
-        
+        $originalPath = "pdffile/original/DS_Transcript_".$post['namaMhsInfo'].'_'.$post['nimMhsInfo'].'.pdf';
+        $signedPath = "pdffile/signed/DS_Transcript_".$post['namaMhsInfo'].'_'.$post['nimMhsInfo'].'.pdf';
+
+        // Insert to Sign
+        $dataFile = array(
+            'date_sign' => strtotime(date('Y-m-d')),
+            'target_whatsapp' => $post['noTargetWhatsapp'],
+            'target_email' => '-',
+            'file_name' => $signedPath,
+            'id_user' => $this->session->userdata('id_user'),
+        ); $idSign = $this->m_sign->insert($dataFile, 'tbl_sign');
+
         // Insert to Info
         $data['info'] = array(
             'no_surat_trans' => '-',
@@ -107,10 +114,9 @@ Class Sign extends MY_Controller{
             'prgstd_mhs_info' => $post['programStudiInfo'],
             'jml_sks' => $post['jmlSks'],
             'nilai_ipk' => $post['nilaiIpk'],
-        ); //$idDetail = $this->m_sign->insert($data['info'], 'tbl_info_trans');
+        ); $idDetail = $this->m_sign->insert($data['info'], 'tbl_info_trans');
         $data['info']['sksxangka'] = $post['jmlTotalAngka'];
 
-        $idDetail = 2;
         // Insert to Tbl Detail
         $i = 0;
         $data['detail'] = array();
@@ -122,41 +128,44 @@ Class Sign extends MY_Controller{
                 'ket_trans' => $post['keteranganNilai'][$i],
                 'nilai_mk_trans' => $post['nilai'][$i],
                 'sks_angka_trans' => $post['angka'][$i],
-                // 'id_info_trans' => $idDetail,
+                'id_info_trans' => $idDetail,
             ));
             $i++;
-        } //$this->m_sign->insert($data['detail'], 'tbl_detail_trans', true);
+        } $this->m_sign->insert($data['detail'], 'tbl_detail_trans', true);
 
         // Print and Send
         if($idDetail != null){
+            
+            //Content QRCODE 
+            $data['qrcode'] = base_url().'public/verification/qrcode_verified/'.$idSign;
 
-            $originalPath = "pdffile/original/DS_Transcript_".$post['namaMhsInfo'].'_'.$post['nimMhsInfo'];
+            // Create PDF to get Hash
             $fileOriginal = $this->print_trans($originalPath, $data);
 
+            // Get PDF content
             $pdfText = $this->parserPDF($originalPath);
 
+            // Hashing the content
             $MD = hash('sha256', $pdfText['file']);
+
+            // Get public Key for encrypt
             $key = $this->m_user->get_user_key($this->session->userdata('id_user'))->row_array();
 
+            // Begin Making Digital Signature by Encrypting Message Digest contain hashed pdf content using Public Key
             $data['sign'] = $this->rsa_key->encrypt($MD, $key['public_key']);
 
-            $signedPath = "pdffile/signed/DS_Transcript_".$post['namaMhsInfo'].'_'.$post['nimMhsInfo'];
-            $this->print_trans($signedPath, $data, "I");
+            // Implement the sign to Last page of File 
+            $this->print_trans($signedPath, $data, $key['private_key']);
 
-            // Save file info to DB
-            $dataFile = array(
-                'date_sign' => strtotitme(date('Y-m-d')),
-                'target_whatsapp' => $post['noTargetWhatsapp'],
-                'target_email' => '-',
-                'file_name' => $signedPath,
-                'id_user' => $this->session->userdata('id_user'),
-            );
-
+            // Sending
             // $this->send_trans();
+
+            $this->session->set_flashdata('filePath', $signedPath); redirect('user/log');
         }
+        
     }
 
-    function print_trans($path, $data, $saves = "F") 
+    function print_trans($path, $data, $prKey = null, $saves = "F") 
     {
         // $this->debug($data['sign']); 
         $html = $this->load->view('admin/print_transcript_ver2', $data, true);
@@ -179,7 +188,11 @@ Class Sign extends MY_Controller{
             $signHtml = '<div style="font-size:12px">Generate Digital Signature : <br><br>
             |'.$data['sign'].'| <br><br>
             Signed By : '.$this->session->userdata('username').' <br>
-            Created By : Sivtrans.com</div>';
+            Privat Key : |'.$prKey.'| <br>
+            Created By : Sivtrans.com</div>
+            <br><br>
+            <img src="'.(new QRCode)->render($data['qrcode']).'" alt="QR Code" />
+            ';
 
             $mpdf->AddPage('P'); 
             $mpdf->WriteHTML($signHtml);
@@ -190,6 +203,6 @@ Class Sign extends MY_Controller{
 
         return $path;
     }
-    
+
 }
 ?>

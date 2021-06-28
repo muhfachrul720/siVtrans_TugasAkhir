@@ -6,6 +6,11 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		// $this->template->load('template_landing','landing/landing_page');
-		$this->template->load('template_landing','landing/new_landing_page');
+		$this->template->load('template_landing','landing/landing_page');
+	}
+	
+	public function verifikasi()
+	{
+		$this->template->load('template_landing','public/verification_page');
 	}
 }

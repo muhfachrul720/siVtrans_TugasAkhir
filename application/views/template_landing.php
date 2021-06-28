@@ -1,104 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>SIVTrans</title>
 
-      <link rel="stylesheet" href="<?= base_url()?>assets/admin-lte/dist/css/adminlte.min.css">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="<?=base_url()?>assets/lp/style1.css">
+  <link rel="stylesheet" href="<?= base_url()?>assets/admin-lte/plugins/fontawesome-free/css/all.min.css">
+  
+  <title>SIPENTAS</title>
+</head>
 
-      <link rel="stylesheet" href="<?= base_url()?>assets/admin-lte/plugins/fontawesome-free/css/all.min.css">
+<style>
+    .nav-bar {
+        font-size:20px !important;
+    }
 
-       <!-- jQuery -->
-       <script src="<?= base_url()?>assets/admin-lte/plugins/jquery/jquery.min.js"></script>
+    .text-center {
+        text-align:center;
+    } 
 
-    </head>
-    <style>
+    .container h1{
+        text-align:center;
+        width : 100% !important;
+        font-size:40px !important;
+    }
 
-        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;500&display=swap');
+    .file-input {
+        width:100%;
+        padding: 10px 20px;
+        border : solid 2px rgb(220, 20, 60);
+        color:white;
+        font-size:14px;
+        cursor:pointer;
+    }
 
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;700&display=swap');
+    .file-input:hover {
+        background-color: rgb(220, 20, 60);
+        transition : 0.2s ease;
+    }
 
-        .all-white {
-          background-color:white;
-          color:black;
-          border:none;
-        }
-        .side-blue {
-          font-family: 'Kanit', sans-serif;
-          background: linear-gradient(108.22deg, #80CDFF 0.47%, #59BDFF 58.3%, #56BDFF 95.69%);
-          border:none;
-          color:white;
-        }
-        .img-interact {
-          cursor:pointer;
-        }
-        .img-interact:hover{
-          transition:0.2s ease;
-          transform:rotate(10deg);
-        }
-        .ps-relative {
-          position:relative;
-        }
-        .vertical-centered-content {
-          position:absolute;
-          left:50%;
-          top:50%;
-          transform:translate(-50%, -50%);
-          width:60%;
-        }
-        .custom-card {
-          padding:10px 20px;
-          border-radius:3px;
-        }
-        .thin {
-          font-weight:300;
-        }
-        .upload-box{
-            border-radius:3px;
-            width:80%;
-            border:dashed 4px #ffffff;
-            height:290px;
-            color:#ffffff;
-            text-align:center;
-            display:table;
-            margin:auto;
-        }  
-        .upload-box .upload-icon {
-            display:table-cell;
-            vertical-align:middle;
-        }
+    .button-verif {
+        margin:0px 10px;
+        padding: 12px 20px;
+        font-size:15px;
+        background-color: rgb(220, 20, 60);
+        border:none;
+        color:white;
+        font-weight:bold;
+    }
 
-        .upload-icon i, .icon-lg {
-            font-size: 36px;
-        }
+    .button-verif:hover {
+        background-color: rgb(180, 20, 60);
+    }
+</style>
 
-        .upload-box--drag {
-            border:solid 4px #FFFFFF;
-            color:#FFFFFF;
-        }
-
-        .fa-times {
-          color:red;
-        }
-
-        .fa-check {
-          color:green;
-        }
-
-    </style>
-    <body>
-
-    <div class="all-white" style="position:relative">
-      <?php echo $contents; ?>
+<body>
+  <!-- Header -->
+  <section id="header">
+    <div class="header container">
+      <div class="nav-bar">
+        <div class="brand">
+          <a href="<?= base_url()?>welcome">
+            <h1 style="font-size:20px !important">SIPENTAS</h1>
+          </a>
+        </div>
+        <div class="nav-list">
+          <div class="hamburger">
+            <div class="bar"></div>
+          </div>
+          <ul>
+            <li><a style="font-size:15px !important" href="<?= base_url()?>welcome/verifikasi" data-after="About">Verifikasi</a></li>
+            <li><a style="font-size:15px !important" href="<?= base_url()?>auth" data-after="Contact">Login</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
+  </section>
+  <!-- End Header -->
+  
+  <?= $contents ?>
 
-    <!-- jQuery UI 1.11.4 -->
-    <script src="<?= base_url()?>assets/admin-lte/plugins/jquery-ui/jquery-ui.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="<?= base_url()?>assets/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="<?= base_url()?>assets/admin-lte/dist/js/adminlte.js"></script>
 
-  </body>
+  <!-- Footer -->
+  <section id="footer">
+    <div class="footer container">
+      <p>Copyright © 2020 Arfan. All rights reserved</p>
+    </div>
+  </section>
+  <!-- End Footer -->
+
+    <!-- jQuery -->
+    <script src="<?= base_url()?>assets/admin-lte/plugins/jquery/jquery.min.js"></script>
+    <script src="<?=base_url()?>assets/lp/app.js"></script>
+    <script>
+        $('#fileTrans').on('change', function(){
+            var filename = $(this).val().replace(/C:\\fakepath\\/i, '');
+            $(this).prev().text(filename);
+            $(this).prev().css('background-color', 'rgb(220, 20, 60)');
+        })
+
+        $(document).ready(function() {
+            $('#myModal').modal('show');
+        } );
+    </script>
+</body>
+
 </html>

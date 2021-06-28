@@ -49,6 +49,7 @@ Class User extends MY_Controller{
                 } 
 
                 $data_db = array(
+                    'unique_id' => bin2hex(random_bytes(20)),
                     'username' => $post['username'],
                     'password' => $hashPass,
                     'user_level' => $post['level'],

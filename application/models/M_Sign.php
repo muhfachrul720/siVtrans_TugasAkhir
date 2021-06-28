@@ -3,6 +3,7 @@ Class M_sign extends CI_Model{
 
     protected $primary_table = 'tbl_sign';
     protected $secondary_table = 'tbl_key';
+    protected $third = 'tbl_user';
     // protected $third_table = 'tbl_key';
 
     public function __construct()
@@ -34,15 +35,22 @@ Class M_sign extends CI_Model{
     // Get 
     public function get_all_sign($where)
     {
+        $this->db->select('si.*, us.username');
         $this->db->from($this->primary_table.' as si');
-        $this->db->join($this->secondary_table.' as ky', 'si.id_key = ky.id_key');
+        $this->db->join($this->third.' as us', 'si.id_user = us.id_user');
+        // $this->db->join($this->secondary_table.' as ky', 'si.default_key = ky.id_key');
         $this->db->where('si.id_user', $where);
         return $this->db->get();
     }
 
-    public function check_(Type $var = null)
+    public function check_sign($id)
     {
-        # code...
+        $this->db->select('si.*, us.username');
+        $this->db->from($this->primary_table.' as si');
+        $this->db->join($this->third.' as us', 'si.id_user = us.id_user');
+        // $this->db->join($this->secondary_table.' as ky', 'si.default_key = ky.id_key');
+        $this->db->where('id', $id);
+        return $this->db->get();
     }
 
 }

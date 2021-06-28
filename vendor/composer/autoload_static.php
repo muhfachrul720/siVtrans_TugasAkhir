@@ -75,6 +75,11 @@ class ComposerStaticInit357bac61ace2a689edb8befade12c48a
         array (
             'setasign\\Fpdi\\' => 14,
         ),
+        'c' => 
+        array (
+            'chillerlan\\Settings\\' => 20,
+            'chillerlan\\QRCode\\' => 18,
+        ),
         'Z' => 
         array (
             'ZipStream\\' => 10,
@@ -111,6 +116,14 @@ class ComposerStaticInit357bac61ace2a689edb8befade12c48a
         'setasign\\Fpdi\\' => 
         array (
             0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+        'chillerlan\\Settings\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-settings-container/src',
+        ),
+        'chillerlan\\QRCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-qrcode/src',
         ),
         'ZipStream\\' => 
         array (
@@ -169,13 +182,6 @@ class ComposerStaticInit357bac61ace2a689edb8befade12c48a
             'Smalot\\PdfParser\\' => 
             array (
                 0 => __DIR__ . '/..' . '/smalot/pdfparser/src',
-            ),
-        ),
-        'P' => 
-        array (
-            'PHPQRCode' => 
-            array (
-                0 => __DIR__ . '/..' . '/aferrandini/phpqrcode/lib',
             ),
         ),
         'H' => 

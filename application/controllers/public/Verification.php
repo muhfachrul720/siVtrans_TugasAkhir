@@ -5,7 +5,7 @@ Class Verification extends MY_Controller{
     {
         parent::__construct();  
         $this->load->model('m_user');
-        $this->load->library('zipopen');
+        $this->load->model('m_sign');
         $this->load->library('rsa/rsa_key');
     }
 
@@ -16,32 +16,45 @@ Class Verification extends MY_Controller{
         $this->template->load('template_landing','public/verification_page', $data);
     }   
 
+    public function notification_verified()
+    {
+        $this->template->load('template_landing', 'public/notification_verif_page');
+    }
+
     public function verified()
     {
-        $post = $this->input->post();
+        if($_FILES['fileTrans']['name'] != ''){
+            $path = './upload/sign_verification';
+            $file = $this->file_upload($path, 'fileTrans', 'pdf');
 
-        $this->form_rules_required($post);
-        if($this->form_validation->run() != False){
-            if($_FILES['fileSign']['name'] != ''){
-
-                $path = './upload/sign_verification';
-                $file = $this->file_upload($path, 'fileSign', 'pdf');
-
-                $verificateSign = $path.'/'.$file['file_name'];
-                $pdfText = $this->parserPDF($verificateSign, 'V');
-                $cipher = explode('|', $pdfText['sign'] )[1];
-
+            $verificateSign = $path.'/'.$file['file_name'];
+            $pdfText = $this->parserPDF($verificateSign, 'V');
+            if(isset(explode('|', $pdfText['sign'])[1])){
+                $cipher = explode('|', $pdfText['sign'])[1];
+            
+                $privatKey = explode('|', $pdfText['sign'])[3];
+    
                 $fileMD = hash('sha256', $pdfText['file']);
-                $signMD = $this->rsa_key->decrypt($cipher, $post['privatKey']);
+                $signMD = $this->rsa_key->decrypt($cipher, $privatKey);
                 
-                if($fileMD === $signMD){echo 'Sama'; } else {echo 'Tidak Sama'; };
-            }   
-        }
+                if($fileMD === $signMD){
+                    $this->session->set_flashdata('success', 'Hash File : '.$fileMD.' <br> Hash Signature : '.$signMD); redirect('public/verification/notification_verified');
+                } else {  $this->session->set_flashdata('fail', 'Hash File : '.$fileMD.' <br> Hash Signature : '.$signMD); redirect('public/verification/notification_verified'); };
+            } else {$this->session->set_flashdata('message', 'Format File Transkrip Berbeda atau belum ditanda tanganin'); redirect($_SERVER['HTTP_REFERER']); }
+        } else { $this->session->set_flashdata('message', 'Tidak Mengupload File'); redirect($_SERVER['HTTP_REFERER']); }
     }
 
     public function qrcode_verified($id)
     {
-        $this->m_
+        $row = $this->m_sign->check_sign($id);
+
+        if($row->num_rows() < 1){
+            $this->session->set_flashdata('fail', 'fail'); 
+            $this->template->load('template_landing','public/qrcode_verification_page', array('detail' => $row->row_array()));
+        } else {
+            $this->session->set_flashdata('succ', 'succ'); 
+            $this->template->load('template_landing','public/qrcode_verification_page', array('detail' => $row->row_array()));
+        }
     }
 
     function delete_directory($dirname) {

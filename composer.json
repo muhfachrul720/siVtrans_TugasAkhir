@@ -10,7 +10,7 @@
         "smalot/pdfparser": "*",
         "phpoffice/phpspreadsheet": "^1.18",
         "mpdf/mpdf": "^8.0",
-        "aferrandini/phpqrcode": "^1.0"
+        "chillerlan/php-qrcode": "^3.4"
     }
  
 }
