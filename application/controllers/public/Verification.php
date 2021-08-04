@@ -47,7 +47,7 @@ Class Verification extends MY_Controller{
     public function qrcode_verified($id)
     {
         $row = $this->m_sign->check_sign($id);
-
+        
         if($row->num_rows() < 1){
             $this->session->set_flashdata('fail', 'fail'); 
             $this->template->load('template_landing','public/qrcode_verification_page', array('detail' => $row->row_array()));

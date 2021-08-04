@@ -31,6 +31,20 @@
             }
         }
 
+        function sendwa($notujuan, $url)
+        {
+            $token = "lSxFYK7Oir9w9LfDRWsz1tEhapWiV08EcOrFuAeoHs2ehwVzOg00gVAWCebAYNhK";
+            $pesan = 'Berikut merupakan file transkrip anda, silahkan mengklik <br> Link url dibawah untuk mengunduh <br>'.urlencode($url);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://us.wablas.com/api/send-message?token=".$token."&phone=".$notujuan."&message=".$pesan);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $output = curl_exec($ch);
+            curl_close($ch);
+            return $output;
+
+        }
+
         function debug($params)
         {
             if(is_array($params) == true){
@@ -61,6 +75,8 @@
             
             return $pdfText;
         }
+
+      
     }
 
     class User_Controller extends MY_Controller {

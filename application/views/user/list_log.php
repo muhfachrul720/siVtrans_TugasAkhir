@@ -62,8 +62,9 @@
                             <td><?= dateindo(date('Y-m-d', $l['date_sign']))?></td>
                             <td><?= $l['target_whatsapp']?></td>
                             <td>
-                                <a href="<?= base_url()?><?=$l['file_name']?>" class="btn btn-primary btn-sm" target="_blank"><i class="icon-sm fas fa-download"></i>Unduh File</a>
-                                <a href="" class="btn btn-success btn-sm"><i class="icon-sm fas fa-envelope"></i>Kirim Whatsapp</a>
+                                <a href="<?= base_url()?><?=$l['file_name']?>" class="btn btn-primary btn-sm" target="_blank"><i class="icon-sm fas fa-download"></i></a>
+                                <button class="btn btn-success btn-sm btn-send" data-toggle="modal" data-target="#whatsappModal" value="<?= $l['id']?>"><i class="icon-sm fab fa-whatsapp"></i></button>
+                                <a href="<?= base_url()?>user/log/delete_log/<?= $l['id']?>" class="btn btn-danger btn-sm"><i class="icon-sm fas fa-trash-alt"></i></a>
                             </td>
                         </tr>
                         <?php $no++; }; ?>
@@ -91,12 +92,45 @@
     </div>
   </div>
 </div>
-
 <?php }; ?>
+
+<div class="modal fade" id="whatsappModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered w-50" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class=""><i class="fas fa-times" style="font-size:16px;"></i></span>
+        </button>
+
+        <?= form_open('user/send/send_whatsapp') ?>
+        <input type="hidden" id="id" name="idDoc" value="">
+        <div class="text-center">
+            <p style="padding-top:3px;">Kirim Dokumen Ke Nomor Tujuan</p>
+            <h5 id="noTujuan"></h5>
+        </div>
+        <hr class="mb-2 mt-3">
+        <div>
+            <small>Silahkan mengisi inputan dibawah untuk mengirim ke nomor baru, biarkan kosong untuk mengirim ke nomor tujuan yang telah terdaftar</small>
+            <input type="tel" name="telephone" class="form-control form-control-sm mt-1" pattern="[0-9]{12}">
+            <input type="submit" class="btn btn-success btn-sm w-100 mt-2" value="Kirim">
+        </div>
+        <?= form_close() ?>
+       
+        </div>
+    </div>
+  </div>
+</div>
 
 <script>
     $(document).ready(function() {
         $('#simpleTable').DataTable();
         $('#myModal').modal('show');
     } );
+
+    $('.btn-send').on('click', function(){
+        var val = $(this).val();
+        console.log(val);
+        $('#id').val(val);
+        $('#noTujuan').text(val);
+    });
 </script>

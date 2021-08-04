@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Welcome extends MY_Controller {
 
 	public function index()
 	{
@@ -13,4 +13,5 @@ class Welcome extends CI_Controller {
 	{
 		$this->template->load('template_landing','public/verification_page');
 	}
+
 }

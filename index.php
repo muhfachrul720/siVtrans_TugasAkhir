@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeIgniter
  *
@@ -36,6 +37,7 @@
  * @filesource
  */
 
+ob_start();
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

@@ -4,6 +4,7 @@ Class M_sign extends CI_Model{
     protected $primary_table = 'tbl_sign';
     protected $secondary_table = 'tbl_key';
     protected $third = 'tbl_user';
+    protected $fourth = 'tbl_info_trans';
     // protected $third_table = 'tbl_key';
 
     public function __construct()
@@ -43,12 +44,29 @@ Class M_sign extends CI_Model{
         return $this->db->get();
     }
 
+    public function get_sign_info($where)
+    {
+        $this->db->select('target_whatsapp, file_name');
+        $this->db->from($this->primary_table);
+        $this->db->where('id', $where);
+        return $this->db->get();
+    }
+
     public function check_sign($id)
     {
-        $this->db->select('si.*, us.username');
+        $this->db->select('us.username, in.nama_mhs_info, in.nim_mhs_info, in.nilai_ipk, in.jml_sks');
         $this->db->from($this->primary_table.' as si');
         $this->db->join($this->third.' as us', 'si.id_user = us.id_user');
+        $this->db->join($this->fourth.' as in', 'si.id = in.id_sign');
         // $this->db->join($this->secondary_table.' as ky', 'si.default_key = ky.id_key');
+        $this->db->where('id', $id);
+        return $this->db->get();
+    }
+    
+    public function get_pathfile($id)
+    {
+        $this->db->select('si.file_name');
+        $this->db->from($this->primary_table.' as si');
         $this->db->where('id', $id);
         return $this->db->get();
     }

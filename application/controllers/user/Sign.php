@@ -35,15 +35,15 @@ Class Sign extends MY_Controller{
             
             $spreadsheet = $reader->load($_FILES['file_original']['tmp_name']);
             $getActiveSheet = $spreadsheet->getActiveSheet();
-            $highestRow = $getActiveSheet->getHighestRow();
+            $highestRow = $getActiveSheet->getHighestRow() - 2;
 
-            $sheetData = $getActiveSheet->rangeToArray('A21:G'.$highestRow, null, true, true, true);
+            $sheetData = $getActiveSheet->rangeToArray('A14:H'.$highestRow, null, true, true, true);
 
             // Filter Data
             $arrayCount = count($sheetData);
             $flag = 0;
-            $createArray = array('NO', 'KODE. MK', 'NAMA  MATA  KULIAH', 'SKS', 'NILAI', 'NA', '(3)X(4)');
-            $makeArray = array('NO' => 'NO', 'KODE.MK' => 'KODE.MK', 'NAMAMATAKULIAH' => 'NAMAMATAKULIAH', 'SKS' => 'SKS', 'NILAI' => 'NILAI', 'NA' => 'NA', '(3)X(4)' => '(3)X(4)');
+            $createArray = array('NO', 'KODE. MK', 'NAMA  MATA  KULIAH', 'SKS', 'NILAI', 'ANGKA', '(SKS)X(ANGKA)');
+            $makeArray = array('NO' => 'NO', 'KODE.MK' => 'KODE.MK', 'NAMAMATAKULIAH' => 'NAMAMATAKULIAH', 'SKS' => 'SKS', 'NILAI' => 'NILAI', 'ANGKA' => 'ANGKA', '(SKS)X(ANGKA)' => '(SKS)X(ANGKA)');
             $sheetDataKey = array();
 
             foreach($sheetData as $dataInSheet) {
@@ -58,25 +58,25 @@ Class Sign extends MY_Controller{
             if(empty(array_diff_key($makeArray, $sheetDataKey))){$flag = 1;};
 
             if($flag == 1){
-                for($i = 23; $i<=$highestRow; $i++){
+                for($i = 16; $i<=$highestRow; $i++){
                     $kodeMatkul = filter_var(trim($sheetData[$i][$sheetDataKey['KODE.MK']]), FILTER_SANITIZE_STRING);
                     $namaMatkul = filter_var(trim($sheetData[$i][$sheetDataKey['NAMAMATAKULIAH']]), FILTER_SANITIZE_STRING);
                     $sksMatkul = filter_var(trim($sheetData[$i][$sheetDataKey['SKS']]), FILTER_SANITIZE_STRING);
-                    $nilaiMatkul = filter_var(trim($sheetData[$i][$sheetDataKey['NA']]), FILTER_SANITIZE_STRING);
+                    $nilaiMatkul = filter_var(trim($sheetData[$i][$sheetDataKey['ANGKA']]), FILTER_SANITIZE_STRING);
                     
                     $fetchData[] = array('namaMatkul' => $namaMatkul, 'kodeMatkul' => $kodeMatkul, 'sksMatkul' => $sksMatkul, 'nilaiMatkul' => $nilaiMatkul);    
                 }
 
                 $infoUmumArray = array();
-                $infoUmum = $getActiveSheet->rangeToArray('A11:D19', null, true, true, true);
+                $infoUmum = $getActiveSheet->rangeToArray('A10:D12', null, true, true, true);
                 foreach($infoUmum as $info){
                     $infoUmumArray[preg_replace('/\s+/', '', $info['A'])] = substr($info['D'], 2);
                 }
-                
+
                 
                 $data['info_umum'] = $infoUmumArray;
                 $data['trans'] = $fetchData;
-                $data['no_surat'] = $getActiveSheet->getCell('A9')->getValue();
+                $data['no_surat'] = 'NO SURAT';
 
                 $this->template->load('template_admin','user/new_form_overview_nilai', $data);
 
@@ -94,9 +94,9 @@ Class Sign extends MY_Controller{
     public function generate_trans()
     {   
         $post = $this->input->post();
-        $originalPath = "pdffile/original/DS_Transcript_".$post['namaMhsInfo'].'_'.$post['nimMhsInfo'].'.pdf';
-        $signedPath = "pdffile/signed/DS_Transcript_".$post['namaMhsInfo'].'_'.$post['nimMhsInfo'].'.pdf';
-
+        $originalPath = "pdffile/original/DS_Transcript_".str_replace(' ', '_', $post['namaMhsInfo']).'_'.$post['nimMhsInfo'].'.pdf';
+        $signedPath = "pdffile/signed/DS_Transcript_".str_replace(' ', '_', $post['namaMhsInfo']).'_'.$post['nimMhsInfo'].'.pdf';
+        
         // Insert to Sign
         $dataFile = array(
             'date_sign' => strtotime(date('Y-m-d')),
@@ -114,6 +114,7 @@ Class Sign extends MY_Controller{
             'prgstd_mhs_info' => $post['programStudiInfo'],
             'jml_sks' => $post['jmlSks'],
             'nilai_ipk' => $post['nilaiIpk'],
+            'id_sign' => $idSign,
         ); $idDetail = $this->m_sign->insert($data['info'], 'tbl_info_trans');
         $data['info']['sksxangka'] = $post['jmlTotalAngka'];
 
@@ -158,7 +159,7 @@ Class Sign extends MY_Controller{
             $this->print_trans($signedPath, $data, $key['private_key']);
 
             // Sending
-            // $this->send_trans();
+            // $this->sendwa($post['noTargetWhatsapp'], base_url().''.$signedPath);
 
             $this->session->set_flashdata('filePath', $signedPath); redirect('user/log');
         }
@@ -203,6 +204,8 @@ Class Sign extends MY_Controller{
 
         return $path;
     }
+
+
 
 }
 ?>

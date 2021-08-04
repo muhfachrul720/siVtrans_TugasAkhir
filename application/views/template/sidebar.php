@@ -1,7 +1,7 @@
 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
     <?php
         $user_level = $this->session->userdata('user_level');
-        $sql = "SELECT mn.* FROM tbl_hak_akses as ak JOIN tbl_menu as mn ON ak.id_menu = mn.id_menu WHERE ak.id_user_level = $user_level ORDER BY mn.id_menu, 'DESC'";
+        $sql = "SELECT mn.* FROM tbl_hak_akses as ak JOIN tbl_menu as mn ON ak.id_menu = mn.id_menu WHERE ak.id_user_level = 2 ORDER BY `mn`.`id_menu` DESC";
 
         $main_menu = $this->db->query($sql)->result();
 
@@ -25,7 +25,7 @@
                 foreach($submenu->result() as $sub){
                     echo' 
                     <li class="nav-item">
-                        <a href="'.$sub->url.'" class="nav-link">
+                        <a href="'.base_url().''.$sub->url.'" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>'.$sub->title.'</p>
                         </a>
