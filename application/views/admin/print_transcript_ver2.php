@@ -80,8 +80,8 @@
             </tr>
 
             <?php 
-            $no=1; $arrayNilai = array(null, 'D', 'C', 'B', 'A'); 
-            foreach($detail as $d) {?>
+            $cont=0 ;$no=1; $arrayNilai = array(null, 'D', 'C', 'B', 'A'); 
+            foreach($nilai as $d) {?>
             <tr>
                 <td width="5%"><?= $no ?></td>
                 <td><?= $d['kode_mk_trans'] ?></td>
@@ -89,17 +89,17 @@
                 <td><?= $d['sks_mk_trans'] ?></td>
                 <td><?= $d['nilai_mk_trans'] ?></td>
                 <td><?= $arrayNilai[$d['nilai_mk_trans']] ?></td>
-                <td width="10%"><?= $d['sks_angka_trans'] ?></td>
+                <td width="10%"><?= $d['sks_mk_trans'] * $d['nilai_mk_trans'] ?></td>
                 <td><?= $d['ket_trans']?> </td>
             </tr>
-            <?php $no++; }; ?>
+            <?php $cont=$cont + ($d['sks_mk_trans'] * $d['nilai_mk_trans']); $no++; }; ?>
             
             <tr>
                 <td colspan="3"><b>JUMLAH</b></td>
                 <td><b><?= $info['jml_sks']?></b></td>
                 <td></td>
                 <td></td>
-                <td><b><?= $info['sksxangka']?></b></td>
+                <td><b><?= $cont ?></b></td>
                 <td></td>
             </tr>
             <tr>

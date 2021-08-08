@@ -3,8 +3,17 @@
         <h3>Data Mahasiswa</h3>
         <p>Halaman untuk Menambah Data Mahasiswa</p>
     </div>
+    <?php $ck=''; if($ck = $this->session->flashdata('notif')){?>
+    <div class="col-11">
+        <div class="alert alert-<?=explode('|',$ck)[0]?>" role="alert">
+        <?= explode('|', $ck)[1] ?>
+        </div>
+    </div>
+    <?php }?>
     <div class="col-11">
         <a href="<?= base_url()?>user/mahasiswa/individual_mhs" class="btn btn-primary btn-sm mb-3">Input Nilai Individual</a>
+
+        <?= form_open_multipart('user/mahasiswa/insert_import') ?>
         <div class="card">
             <div class="card-body">
                 <h5>Import Excel Data Mahasiswa</h5>
@@ -36,6 +45,8 @@
                 </div>
             </div>
         </div>
+        <?= form_close() ?>
+
     </div>
 </div>
 
